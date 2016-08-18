@@ -80,9 +80,6 @@ public class TestActivity extends FragmentActivity implements OnMapReadyCallback
     Location mCurrentLocation;
     String mLastUpdateTime;
 
-    private String lat = null;
-    private String lng = null;
-
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(INTERVAL);
@@ -94,7 +91,6 @@ public class TestActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
         //------------------------------------------------------------------------
         if (!isGooglePlayServicesAvailable()) {
             finish();
@@ -108,8 +104,12 @@ public class TestActivity extends FragmentActivity implements OnMapReadyCallback
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(AppIndex.API).build();
-        mLocationTextView = (TextView) findViewById(R.id.test_location);
+
         //------------------------------------------------------------------------
+        setContentView(R.layout.activity_test);
+
+        mLocationTextView = (TextView) findViewById(R.id.test_location);
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -126,9 +126,7 @@ public class TestActivity extends FragmentActivity implements OnMapReadyCallback
         btnTest0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*String start = "台中火車站";
-                String end = "秋紅谷景觀生態公園";*/
-                String start = lat+","+lng; //當前位置
+                String start = "台中火車站";
                 String end = "秋紅谷景觀生態公園";
                 sendRequest(start, end);
                 updateUI();
@@ -239,8 +237,8 @@ public class TestActivity extends FragmentActivity implements OnMapReadyCallback
     private void updateUI() {
         Log.d(TAG, "UI update initiated .............");
         if (null != mCurrentLocation) {
-            lat = String.valueOf(mCurrentLocation.getLatitude());
-            lng = String.valueOf(mCurrentLocation.getLongitude());
+            String lat = String.valueOf(mCurrentLocation.getLatitude());
+            String lng = String.valueOf(mCurrentLocation.getLongitude());
             mLocationTextView.setText("At Time: " + mLastUpdateTime + "\n" +
                     "Latitude: " + lat + "\n" +
                     "Longitude: " + lng + "\n" +

@@ -2,6 +2,7 @@ package com.itshareplus.googlemapdemo;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -33,7 +34,11 @@ import Modules.DirectionFinder;
 import Modules.DirectionFinderListener;
 import Modules.Route;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, DirectionFinderListener {
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, DirectionFinderListener, LocationListener {
 
     private GoogleMap mMap;
     private Button btnFindPath;
@@ -46,6 +51,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private Button btnTest;
 
+    //--------------------------------------------------------------//
+    LocationManager locationManager;
+    double lat = 0;
+    double lng = 0;
+    LatLng myPlace;
+    Location myLocation;
+    //--------------------------------------------------------------//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +66,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        //-----------------------------------------------------------------------------------//
 
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {}
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 0, this);
+
+        //-----------------------------------------------------------------------------------//
         btnTest = (Button) findViewById(R.id.button);
 
         btnFindPath = (Button) findViewById(R.id.btnFindPath);
@@ -103,23 +121,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng test = new LatLng(24.108828, 120.702670); //初始位置
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(test, 18));//地圖顯示的大小
-        originMarkers.add(mMap.addMarker(new MarkerOptions()//箭頭-
-                .title("test start")
-                .position(test)));
+        myPlace = new LatLng(lat, lng); //初始位置
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPlace, 18));//地圖顯示的大小
+        mMap.addMarker(new MarkerOptions().position(myPlace).title("My place").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        mMap.setMyLocationEnabled(true);//定位目前位置
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {}
+        mMap.setMyLocationEnabled(true);
     }
 
 
@@ -182,4 +189,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             polylinePaths.add(mMap.addPolyline(polylineOptions));
         }
     }
+    //------------------------------------------------------------------------------------//
+    @Override
+    public void onLocationChanged(Location location) {
+        mMap.clear();
+        lat = location.getLatitude();
+        lng = location.getLongitude();
+        String msg = "緯度 " + lat + ", 經度 " + lng;
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+
+        myPlace = new LatLng(lat, lng);
+        mMap.addMarker(new MarkerOptions().position(myPlace).title("My place").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPlace, 18));//地圖顯示的大小
+    }
+
+    /** 當服務提供商狀態改變時，會透過這個 method 告知 */
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+    /** 當服務提供商可提供服務時，會透過這個 method 告知 */
+    @Override
+    public void onProviderEnabled(String provider) {}
+
+    /** 當服務提供商失效時，會透過這個 method 告知 */
+    @Override
+    public void onProviderDisabled(String provider) {}
+    //------------------------------------------------------------------------------------//
 }
