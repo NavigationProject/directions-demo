@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">GoogleMapDemo</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="tap_instructions">Tap or long press on the map</string>
+    <string name="Test_location">Test location</string>
+
+</resources>

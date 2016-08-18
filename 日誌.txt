@@ -1,0 +1,45 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
+8/8
+	參考資料
+	https://www.youtube.com/watch?v=CCZPUeY94MU
+8/12
+	DirectionFinder.java加註解
+8/13
+	加入測試頁面
+8/15
+	嘗試座標找路線~~沒成功
+8/17
+	34,41,42,57,69,166~170行待解決
+	參考
+	https://developers.google.com/android/reference/com/google/android/gms/location/FusedLocationProviderApi
+	http://javapapers.com/android/android-location-fused-provider/
+8/18
+	遇到問題
+
+1.導入專案 :  Android Studio: Plugin with id 'android-library' not found
+	解決方式 : 在Gradle中加入
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.1.1'
+    }
+}
+
+2.com.itshareplus.googlemapdemo.TestActivity
+	  cannot be cast to com.google.android.gms.location.LocationListener
+
+	<sol>
+	public class Loc implements 
+GooglePlayServicesClient.ConnectionCallbacks
+,GooglePlayServicesClient.OnConnectionFailedListener
+,com.google.android.gms.location.LocationListener {
+    //...
+}
+3.Attempt to invoke virtual method 'void android.widget.TextView.setText(java.lang.CharSequence)' on a null object reference
+<sol>
+移到setContentView(R.layout.activity_main)下面
