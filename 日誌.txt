@@ -39,3 +39,13 @@ GooglePlayServicesClient.ConnectionCallbacks
 3.Attempt to invoke virtual method 'void android.widget.TextView.setText(java.lang.CharSequence)' on a null object reference
 <sol>
 移到setContentView(R.layout.activity_main)下面
+
+8/19	遇到問題
+
+１.更改專案套件(package)名稱，
+	原因 : 用相同的package會造成不同開發本本用相同的package名，不方便開發，會有覆寫的形況
+	參考資料及解決方法 :　http://hklifenote.blogspot.tw/2015/06/android-studiopackage.html
+2.test頁面打不開
+TestActivity.java ，onStart中
+原本 -> Uri.parse("android-app://com.itshareplus.googlemapdemo/http/host/path")
+需更改 -> Uri.parse("android-app://com.itshareplus.googlemapdemo_james/http/host/path")
