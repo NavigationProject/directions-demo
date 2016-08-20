@@ -1,6 +1,8 @@
 package Modules;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -91,7 +93,6 @@ public class DirectionFinder {
                 while ((line = reader.readLine()) != null) {
                     buffer.append(line + "\n");
                 }
-
                 return buffer.toString();
 
             } catch (MalformedURLException e) {
@@ -139,6 +140,9 @@ public class DirectionFinder {
             JSONObject jsonEndLocation = jsonLeg.getJSONObject("end_location");
             JSONObject jsonStartLocation = jsonLeg.getJSONObject("start_location");
 
+            JSONObject jsonSteps = jsonLeg.getJSONObject("steps");////////////////////////////////////////
+            JSONObject stepduration = jsonSteps.getJSONObject("duration");////////////////////////////////
+
             route.distance = new Distance(jsonDistance.getString("text"), jsonDistance.getInt("value"));
             route.duration = new Duration(jsonDuration.getString("text"), jsonDuration.getInt("value"));
             route.endAddress = jsonLeg.getString("end_address");
@@ -147,9 +151,10 @@ public class DirectionFinder {
             route.endLocation = new LatLng(jsonEndLocation.getDouble("lat"), jsonEndLocation.getDouble("lng"));
             route.points = decodePolyLine(overview_polylineJson.getString("points"));
 
+            route.stepdistance[i] = new Distance(jsonDistance.getString("text"), jsonDistance.getInt("value"));/////////////////////
+
             routes.add(route);
         }
-
         listener.onDirectionFinderSuccess(routes);
     }
 

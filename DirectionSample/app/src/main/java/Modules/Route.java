@@ -15,5 +15,8 @@ public class Route {
     public String startAddress;
     public LatLng startLocation;
 
+    public Distance[] stepdistance;/////////////
+    //public Duration stepduration;
+
     public List<LatLng> points;
 }

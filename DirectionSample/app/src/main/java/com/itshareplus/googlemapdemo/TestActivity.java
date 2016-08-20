@@ -71,6 +71,8 @@ public class TestActivity extends FragmentActivity implements OnMapReadyCallback
 
     private TextView mTapTextView;
     private TextView mLocationTextView;
+
+    private TextView info;
     //------------------------------------------------------------------------
     private static final String TAG = "Location";
     private static final long INTERVAL = 1000 * 10;
@@ -117,6 +119,9 @@ public class TestActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         mTapTextView = (TextView) findViewById(R.id.tap_text);
+
+        info = (TextView) findViewById(R.id.info);
+
 
 
         btnTest0 = (Button) findViewById(R.id.btntest0);
@@ -371,6 +376,7 @@ public class TestActivity extends FragmentActivity implements OnMapReadyCallback
         polylinePaths = new ArrayList<>();
         originMarkers = new ArrayList<>();
         destinationMarkers = new ArrayList<>();
+        //info.setText("NUMBRRR"+ routes.get(0).startAddress. + "\n.............");
 
         for (Route route : routes) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
@@ -398,6 +404,9 @@ public class TestActivity extends FragmentActivity implements OnMapReadyCallback
                 polylineOptions.add(route.points.get(i));
 
             polylinePaths.add(mMap.addPolyline(polylineOptions));
+
+            info.append("\n" + routes.size() + "--\n");////////////////////
+
         }
     }
 }
